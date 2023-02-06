@@ -27,4 +27,40 @@
         id, pname, parentid, grade, media_type, start_time, end_time, description, timelength, orderby, course_id, course_pub_id, status, is_preview, create_date, change_date
     </sql>
 
+    <select id="selectTreeNodes" parameterType="integer" resultType="com.xuecheng.content.model.dto.TeachPlanDto">
+        SELECT
+            one.id one_id,
+            one.pname one_pname,
+            one.parentid one_parentid,
+            one.grade one_grade,
+            one.media_type one_mediaType,
+            one.start_time one_stratTime,
+            one.end_time one_endTime,
+            one.orderby one_orderby,
+            one.course_id one_courseId,
+            one.course_pub_id one_coursePubId,
+            two.id two_id,
+            two.pname two_pname,
+            two.parentid two_parentid,
+            two.grade two_grade,
+            two.media_type two_mediaType,
+            two.start_time two_stratTime,
+            two.end_time two_endTime,
+            two.orderby two_orderby,
+            two.course_id two_courseId,
+            two.course_pub_id two_coursePubId,
+            m.media_fileName mediaFilename,
+            m.id teachplanMeidaId,
+            m.media_id mediaId
+        FROM
+            teachplan one
+                INNER JOIN teachplan two ON two.parentid = one.id
+                LEFT JOIN teachplan_media m ON m.teachplan_id = two.id
+        WHERE
+            one.parentid=0    and   one.course_id = #{courseId}
+        ORDER BY
+            one.orderby,
+            two.orderby
+    </select>
+
 </mapper>
